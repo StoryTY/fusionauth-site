@@ -194,3 +194,43 @@ FusionAuth strives to maintain backwards compatibility when making changes to AP
 ### 401s With New API Keys
 
 <NewApiKey401 />
+
+### A note about eventInfo
+
+Use Case: You want to include information from the start of an API call to be transmitted to webhook.  This can be accomplished by updating the eventInfo object in the API call as below.
+
+For example, in the User API, the API call might look as follows,
+
+<API method="POST" uri="/api/user" authentication={["api-key"]} title="Create a User with a randomly generated Id"/>
+
+```
+{
+  // ..
+  "eventInfo": {
+    "data": {
+      "lastSyncInstant": 1595361142909
+    }
+  },
+  "user": {
+    // the user object to be created
+    // ..
+  }
+  // ..
+}
+```
+
+The above API call will result in the following be transmitted to the webhook event being sent out.
+
+```
+{
+  "event": {
+    "info": {
+      "data": {
+        "lastSyncInstant": 1595361142909
+      },
+    }
+    // ..
+  }
+}
+
+```
