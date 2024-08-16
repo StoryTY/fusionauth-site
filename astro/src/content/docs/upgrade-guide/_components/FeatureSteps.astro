@@ -1,0 +1,20 @@
+---
+import { features } from '../../../../tools/account/util';
+
+export interface Props {
+  feature: string;
+}
+
+let { feature }: Props = Astro.props;
+
+let name = features[feature];
+if (!name) {
+  name = feature;
+  feature = Object.entries(features).find(([key, value]) => value === feature)[0];
+}
+---
+<div class="feature-step-container" data-feature={feature}>
+  <h3>{ name }</h3>
+  <slot></slot>
+</div>
+

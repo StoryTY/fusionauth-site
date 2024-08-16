@@ -1,0 +1,136 @@
+---
+import { features } from '../../../../tools/account/util';
+interface VersionInfo {
+  version: string;
+  steps: string[];
+}
+
+interface AllVersions {
+  [version: string]: VersionInfo;
+}
+
+import Steps from './_steps.mdx';
+
+---
+<div id="layout-container" class="flex flex-row max-w-4xl">
+  <section id="selectors-section" class="flex-grow">
+    <p>What version are you on?</p>
+    <label for="current-version">Current Version</label>
+    <select id="current-version" class="select border-2 border-gray-300 focus-ring-indigo-300 h-10 px-2 dark:text-slate-900"></select>
+    <p>What version do you want to upgrade to?</p>
+    <label for="upgrade-version">Upgrade Version</label>
+    <select id="upgrade-version" class="select border-2 border-gray-300 focus-ring-indigo-300 h-10 px-2 dark:text-slate-900"></select>
+    <div>
+      <p>Here are all of the steps:</p>
+      <div id="steps-container"></div>
+    </div>
+    <Steps />
+  </section>
+  <section id="filters-section" class="flex flex-row justify-items-start min-w-1/2 ml-4 p-4 ">
+    <!-- Add a button to toggle the panel -->
+    <details class="max-w-1xl">
+      <summary class="list-none w-80 flex justify-center">
+        <span class="bg-blue-400 p-2 rounded w-40 text-center">Features</span>
+        <div id="all-container" class="flex flex-row items-center justify-center w-40">
+          <label for="all-toggle" class="mx-2">All</label>
+          <input type="checkbox" id="all-toggle" checked/>
+        </div>
+      </summary>
+      { Object.entries(features).map(([feature, name]) => (
+        <div class:list={["flex justify-between", feature === 'all' ? 'hidden': '']}>
+          <label for=`${feature}-filter`>{name}</label>
+          <input type="checkbox" class="filter-toggle" id=`${feature}-filter` checked value={feature}/>
+        </div>
+      )) }
+    </details>
+
+
+  </section>
+</div>
+
+<script>
+  import { getLatestVersion, getVersions, features } from '../../../../tools/account/util';
+
+  const versionsResponse = await getVersions();
+  const latest = await getLatestVersion();
+  const versions = versionsResponse.versions.reverse();
+  const nextLatest = versions[ versions.indexOf(latest ) + 1 ];
+  const options = versions.map(version => `<option value="${version}">${version}</option>`).join('\n');
+
+  const currentSelect = document.getElementById('current-version') as HTMLSelectElement;
+  const upgradeSelect = document.getElementById('upgrade-version') as HTMLSelectElement;
+
+  const stepsContainer = document.getElementById('steps-container');
+
+  const url = new URL(window.location.href);
+  const current = url.searchParams.has('current') ? url.searchParams.get('current') : nextLatest;
+
+  [currentSelect, upgradeSelect].forEach(select => {
+    select.innerHTML = options;
+  });
+
+  currentSelect.querySelectorAll('option').forEach(option => {
+    if (option.value === current) {
+      option.selected = true;
+    }
+  });
+  upgradeSelect.querySelectorAll('option').forEach(option => {
+    if (option.value === latest) {
+      option.selected = true;
+    }
+  });
+
+  const updateSteps = (from: string, to: string) => {
+    const realSteps = versions.slice(versions.indexOf(to), versions.indexOf(from));
+    const templates = document.querySelectorAll('template');
+    const allSteps = realSteps.reverse().map(version => {
+      const template = [...templates].find(t => t.dataset.version === version);
+      if (template) {
+        return template.innerHTML;
+      } else {
+        return '';
+      }
+    });
+    stepsContainer.innerHTML = allSteps.join('\n');
+  }
+
+  const updateBySelected = () => {
+    const current = [...currentSelect.querySelectorAll('option')].find(o => o.selected).value;
+    const upgrade = [...upgradeSelect.querySelectorAll('option')].find(o => o.selected).value;
+    updateSteps(current, upgrade);
+    hideStuff();
+  }
+
+  updateSteps(current, latest);
+
+  [currentSelect, upgradeSelect]
+      .forEach(select =>
+          select.addEventListener('change', _ =>
+              updateBySelected()));
+
+
+  const filtersToggle = document.getElementById('all-toggle') as HTMLInputElement;
+  filtersToggle.addEventListener('change', e => {
+    const checked = filtersToggle.checked;
+    document.querySelectorAll('input[type="checkbox"]').forEach((input: HTMLInputElement) => {
+      input.checked = checked;
+    });
+    updateBySelected();
+  });
+
+  const hideStuff = () => {
+    const sections = [...document.querySelectorAll('.feature-step-container')] as HTMLElement[];
+    const toggles = [...document.querySelectorAll('.filter-toggle')] as HTMLInputElement[];
+    toggles.filter((input: HTMLInputElement) => !input.checked && input.value !== 'all').forEach(filter => {
+      sections.filter(section => section.dataset.feature === filter.value).forEach(section => {
+        console.log('section', section.dataset.feature);
+        section.style.display = 'none';
+      });
+    });
+  }
+
+  document.querySelectorAll('.filter-toggle').forEach((input: HTMLInputElement) => {
+    input.addEventListener('change', e => updateBySelected());
+  });
+
+</script>

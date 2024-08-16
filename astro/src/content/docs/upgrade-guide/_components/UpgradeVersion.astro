@@ -1,0 +1,16 @@
+---
+
+export interface Props {
+  version: string;
+}
+
+const { version }: Props = Astro.props;
+const anchor = version.replace(/\./g, '-');
+---
+<template data-version={version}>
+  <h2>{ version }</h2>
+  <a href=`/docs/release-notes/#version-${anchor}`>Release Notes</a>
+  <slot></slot>
+</template>
+
+

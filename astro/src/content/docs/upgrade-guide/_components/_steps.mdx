@@ -1,0 +1,56 @@
+import { features } from '../../../../tools/account/util.js';
+import UpgradeVersion from './UpgradeVersion.astro';
+import FeatureSteps from './FeatureSteps.astro';
+
+<UpgradeVersion version="1.52.0">
+  <FeatureSteps feature={features.applicationThemes}>
+    - If you would like to use the default Date Picker, see the `_helpers.ftl` in the default FusionAuth theme to see how we accomplished this.
+    - Ensure that any date fields used in your registration forms are styled appropriately
+  </FeatureSteps>
+  <FeatureSteps feature={features.advancedRegistration}>
+    - Ensure that any dates fields used in your advanced registration forms are styled appropriately
+  </FeatureSteps>
+</UpgradeVersion>
+
+<UpgradeVersion version="1.51.0">
+  <FeatureSteps feature={features.advancedMultiFactorAuthentication}>
+    - If you have SMS two-factor authentication enabled, ensure that any templates set at the application level are appropriate as they will now override the templates at the tenant level
+  </FeatureSteps>
+  <FeatureSteps feature={features.hostedBackend}>
+    - If you were using the hosted backend you should verify that the change to how the domain is scoped in the token cookie does not impact your application.
+      - See [Github Issue #2735](https://github.com/FusionAuth/fusionauth-issues/issues/2735)
+  </FeatureSteps>
+</UpgradeVersion>
+
+<UpgradeVersion version="1.50.0">
+  <FeatureSteps feature={features.all}>
+    - If you are using an IFRAME to facilitate a login flow, especially if it is cross-origin, please read the release notes to understand the changes in the OAuth flow that may impact your application.
+    - If you are using the `/oauth2/userinfo` please ensure that the `aud` claim is present on the provided access tokens.
+    - If you are using the `/oauth2/device/user-code` endpoint endure that it can handle the `scope` parameter that was added.
+    - If you are using email verification please ensure that the change in when the emails will be sent does not adversely affect your application. See [Github Issue #1651](https://github.com/FusionAuth/fusionauth-issues/issues/1651) and [Github Issue #2672](https://github.com/FusionAuth/fusionauth-issues/issues/2672)
+  </FeatureSteps>
+  <FeatureSteps feature={features.advancedOAuthScopesCustomScopes}>
+    - Please check your `Scope handling policy` to see if it should be adjusted. See [Scope handling policy](https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/scopes#scope-handling-policy) for more detail.
+  </FeatureSteps>
+</UpgradeVersion>
+
+<UpgradeVersion version="1.49.2">
+  <FeatureSteps feature={features.advancedRegistration}>
+    - If you are using verification emails check for any with the setting of `short code` to ensure that the change in behavior does not affect your application. See [Github Issue #1734](https://github.com/FusionAuth/fusionauth-issues/issues/1734)
+  </FeatureSteps>
+</UpgradeVersion>
+
+<UpgradeVersion version="1.49.1">
+  <FeatureSteps feature={features.advancedLambdas}>
+    - Ensure that any lambda functions that are using the Nashorn engine are compatible with Graal. See [Github Issue #1828](https://github.com/FusionAuth/fusionauth-issues/issues/1828)
+  </FeatureSteps>
+  <FeatureSteps feature={features.applicationThemes}>
+    - We will now fall back to the default theme if a template is missing from your custom theme. Please review the current [Theme templates](https://fusionauth.io/docs/customize/look-and-feel/advanced-theme-editor) to ensure that you have all the necessary templates.
+  </FeatureSteps>
+  <FeatureSteps feature={features.advancedIdentityProviders}>
+    - If you are using the LinkedIN IDP please check that your configuration is correct. See [Github Issue #2496](https://github.com/FusionAuth/fusionauth-issues/issues/2496).
+  </FeatureSteps>
+  <FeatureSteps feature={features.all}>
+    - Ensure that the new `Confirmation required` page does not disrupt any of your application flows. See [Github Issue #2443](https://github.com/FusionAuth/fusionauth-issues/issues/2443)
+  </FeatureSteps>
+</UpgradeVersion>
