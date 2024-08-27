@@ -14,7 +14,7 @@ import Steps from './_steps.mdx';
 ---
 <div id="layout-container" class="flex flex-row max-w-4xl">
   <section id="selectors-section" class="flex-grow">
-    <p>What version are you on?</p>
+    <p class="mt-0">What version are you on?</p>
     <label for="current-version">Current Version</label>
     <select id="current-version" class="select border-2 border-gray-300 focus-ring-indigo-300 h-10 px-2 dark:text-slate-900"></select>
     <p>What version do you want to upgrade to?</p>
@@ -26,11 +26,11 @@ import Steps from './_steps.mdx';
     </div>
     <Steps />
   </section>
-  <section id="filters-section" class="flex flex-row justify-items-start min-w-1/2 ml-4 p-4 ">
+  <section id="filters-section" class="flex flex-row justify-items-start min-w-1/2 ml-4 p-4">
     <!-- Add a button to toggle the panel -->
-    <details class="max-w-1xl">
+    <details class="max-w-1xl transition ease-in-out delay-300 open:-translate-y-1">
       <summary class="list-none w-80 flex justify-center">
-        <span class="bg-blue-400 p-2 rounded w-40 text-center">Features</span>
+        <span class="bg-opacity-0 p-1 border-2 border-blue-600 rounded w-40 text-center">Features</span>
         <div id="all-container" class="flex flex-row items-center justify-center w-40">
           <label for="all-toggle" class="mx-2">All</label>
           <input type="checkbox" id="all-toggle" checked/>
