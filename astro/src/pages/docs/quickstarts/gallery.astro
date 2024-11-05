@@ -1,0 +1,17 @@
+---
+import Layout from "../../../layouts/Quickstart.astro";
+import { QuickstartGallery } from "../../../components/react/QuickstartGallery";
+
+const frontmatter = {disableTOC: true};
+const title = "Quickstart Gallery";
+const description = "Look at all the stuff we have!";
+
+// got fetch json or make whatever api calls you need here!
+const data = {
+  title: "Datastuff",
+  description: "I am some data",
+}
+---
+<Layout {frontmatter} {title} {description}>
+  <QuickstartGallery data={data} />
+</Layout>

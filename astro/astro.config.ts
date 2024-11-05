@@ -6,6 +6,7 @@ import tailwind from "@astrojs/tailwind";
 import indexPages from "astro-index-pages/index.js";
 import {rehypeTasklistEnhancer} from './src/plugins/rehype-tasklist-enhancer';
 import {codeTitleRemark} from './src/plugins/code-title-remark';
+import react from '@astrojs/react';
 
 const optionalIntegrations = [];
 if (!process.env.DEV) {
@@ -30,6 +31,7 @@ const config = defineConfig({
       filter: siteMapFilter
     }),
     indexPages(),
+    react(),
     tailwind({
       applyBaseStyles: true,
       nesting: true,
