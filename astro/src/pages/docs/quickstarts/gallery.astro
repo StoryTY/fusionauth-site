@@ -1,17 +1,26 @@
 ---
 import Layout from "../../../layouts/Quickstart.astro";
 import { QuickstartGallery } from "../../../components/react/QuickstartGallery";
+import { DataAPIClient, Collection } from "@datastax/astra-db-ts";
+
+const ASTRA_DB_API_ENDPOINT = process.env["ASTRA_DB_API_ENDPOINT"];
+const ASTRA_DB_APPLICATION_TOKEN = process.env["ASTRA_DB_APPLICATION_TOKEN"];
+
+const client = new DataAPIClient(ASTRA_DB_APPLICATION_TOKEN);
+const db = client.db(ASTRA_DB_API_ENDPOINT);
+
+let collection = db.collection("examples_and_starters");
+let documents = []
+await collection.find({}).forEach((doc) => {
+      documents.push(doc)
+      })
+
 
 const frontmatter = {disableTOC: true};
 const title = "Quickstart Gallery";
 const description = "Look at all the stuff we have!";
 
-// got fetch json or make whatever api calls you need here!
-const data = {
-  title: "Datastuff",
-  description: "I am some data",
-}
 ---
 <Layout {frontmatter} {title} {description}>
-  <QuickstartGallery data={data} />
+  <QuickstartGallery docs={documents} client:load/>
 </Layout>

@@ -1,6 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../../layouts/Quickstart.astro";
+import { DataAPIClient, Collection } from "@datastax/astra-db-ts";
+
 
 export async function getStaticPaths() {
   const entry = await getCollection("quickstarts");
